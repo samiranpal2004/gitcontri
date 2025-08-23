@@ -1,17 +1,5 @@
-import {
-  Search,
-  Download,
-  Trophy,
-  GitBranch,
-  FileText,
-  Star,
-  Users,
-  TrendingUp,
-  Calendar,
-  BarChart3,
-  LucidePieChart as RechartsPieChart,
-  Bell as Cell,
-} from "lucide-react";
+import { useState } from "react";
+import { Search, GitBranch, FileText, Star, Users } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -25,130 +13,123 @@ import { Badge } from "./components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "./components/ui/avatar";
 import { Progress } from "./components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
-import ThemeToggle from "./components/ThemeToggle";
-import {
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Pie,
-  AreaChart,
-  Area,
-  LineChart,
-  Line,
-} from "recharts";
 
 // Example of accessing the GitHub token from environment variables
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
 console.log("GitHub Token available:", !!GITHUB_TOKEN);
 
-// Dummy data for demonstration
-const contributorsData = [
-  {
-    id: 1,
-    name: "Sarah Chen",
-    username: "sarahc",
-    avatar: "/developer-woman.png",
-    commits: 127,
-    linesAdded: 8420,
-    linesRemoved: 2341,
-    score: 94,
-    badges: ["Feature Hero", "Code Quality"],
-    contributions: [
-      { date: "2024-01", commits: 15 },
-      { date: "2024-02", commits: 22 },
-      { date: "2024-03", commits: 18 },
-      { date: "2024-04", commits: 25 },
-      { date: "2024-05", commits: 20 },
-      { date: "2024-06", commits: 27 },
-    ],
-  },
-  {
-    id: 2,
-    name: "Alex Rodriguez",
-    username: "alexr",
-    avatar: "/developer-man.png",
-    commits: 89,
-    linesAdded: 5230,
-    linesRemoved: 1876,
-    score: 87,
-    badges: ["Bug Fixer", "Reviewer"],
-    contributions: [
-      { date: "2024-01", commits: 12 },
-      { date: "2024-02", commits: 16 },
-      { date: "2024-03", commits: 14 },
-      { date: "2024-04", commits: 18 },
-      { date: "2024-05", commits: 15 },
-      { date: "2024-06", commits: 14 },
-    ],
-  },
-  {
-    id: 3,
-    name: "Maya Patel",
-    username: "mayap",
-    avatar: "/placeholder-pkuk3.png",
-    commits: 156,
-    linesAdded: 12340,
-    linesRemoved: 4521,
-    score: 92,
-    badges: ["Doc Master", "Feature Hero"],
-    contributions: [
-      { date: "2024-01", commits: 20 },
-      { date: "2024-02", commits: 28 },
-      { date: "2024-03", commits: 24 },
-      { date: "2024-04", commits: 32 },
-      { date: "2024-05", commits: 26 },
-      { date: "2024-06", commits: 26 },
-    ],
-  },
-  {
-    id: 4,
-    name: "David Kim",
-    username: "davidk",
-    avatar: "/placeholder-3fjvb.png",
-    commits: 73,
-    linesAdded: 3890,
-    linesRemoved: 1234,
-    score: 78,
-    badges: ["Tester", "Bug Fixer"],
-    contributions: [
-      { date: "2024-01", commits: 8 },
-      { date: "2024-02", commits: 12 },
-      { date: "2024-03", commits: 10 },
-      { date: "2024-04", commits: 15 },
-      { date: "2024-05", commits: 14 },
-      { date: "2024-06", commits: 14 },
-    ],
-  },
-];
-
-const pieChartData = [
-  { name: "Sarah Chen", value: 35, color: "hsl(var(--chart-1))" },
-  { name: "Maya Patel", value: 28, color: "hsl(var(--chart-2))" },
-  { name: "Alex Rodriguez", value: 22, color: "hsl(var(--chart-3))" },
-  { name: "David Kim", value: 15, color: "hsl(var(--chart-4))" },
-];
-
-const timelineData = [
-  { month: "Jan", Sarah: 15, Maya: 20, Alex: 12, David: 8 },
-  { month: "Feb", Sarah: 22, Maya: 28, Alex: 16, David: 12 },
-  { month: "Mar", Sarah: 18, Maya: 24, Alex: 14, David: 10 },
-  { month: "Apr", Sarah: 25, Maya: 32, Alex: 18, David: 15 },
-  { month: "May", Sarah: 20, Maya: 26, Alex: 15, David: 14 },
-  { month: "Jun", Sarah: 27, Maya: 26, Alex: 14, David: 14 },
-];
-
-const badgeColors = {
-  "Feature Hero": "bg-chart-1 text-white",
-  "Bug Fixer": "bg-chart-5 text-white",
-  "Doc Master": "bg-chart-2 text-white",
-  "Code Quality": "bg-chart-3 text-white",
-  Reviewer: "bg-chart-4 text-white",
-  Tester: "bg-secondary text-secondary-foreground",
-};
-
 function App() {
+  // State for GitHub username and repository
+  const [username, setUsername] = useState("");
+  const [repo, setRepo] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+
+  // State for API data
+  const [contributors, setContributors] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [searchPerformed, setSearchPerformed] = useState(false);
+  const [stats, setStats] = useState(null);
+
+  // Handle search submission
+  const handleSearch = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    // Parse input for username/repo format
+    const parts = searchInput.split("/");
+    const newUsername = parts[0]?.trim();
+    const newRepo = parts[1]?.trim();
+
+    if (!newUsername || !newRepo) {
+      setError(
+        "Please enter a valid GitHub repository in the format username/repository"
+      );
+      return;
+    }
+
+    setUsername(newUsername);
+    setRepo(newRepo);
+    setError(null);
+    setSearchPerformed(true);
+
+    try {
+      setLoading(true);
+
+      // Fetch contributors from backend API
+      const contributorsResponse = await fetch(
+        `http://localhost:5000/api/contributors/${newUsername}/${newRepo}`
+      );
+      if (!contributorsResponse.ok) {
+        throw new Error(
+          `Failed to fetch contributors: ${contributorsResponse.statusText}`
+        );
+      }
+      const contributorsData = await contributorsResponse.json();
+      setContributors(contributorsData);
+
+      // Fetch repository stats from backend API
+      try {
+        const statsResponse = await fetch(
+          `http://localhost:5000/api/stats/${newUsername}/${newRepo}`
+        );
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json();
+          setStats(statsData);
+        }
+      } catch (statsErr) {
+        console.warn("Could not fetch repository statistics:", statsErr);
+        // Don't fail the whole operation if stats can't be fetched
+      }
+    } catch (err) {
+      console.error("API Error:", err);
+      setError(err.message || "Failed to fetch data from the API");
+      setContributors([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Calculate totals for metrics
+  const calculateTotals = () => {
+    // If we have stats from the API, use those values
+    if (stats && stats.contributions) {
+      return {
+        commits: stats.totalCommits || 0,
+        additions: stats.totalAdditions || 0,
+        deletions: stats.totalDeletions || 0,
+        pullRequests: stats.totalPRs || 0,
+        // Include any other metrics from the stats API
+      };
+    }
+
+    // Otherwise, calculate from contributors array
+    if (!contributors || contributors.length === 0)
+      return { commits: 0, additions: 0, deletions: 0, pullRequests: 0 };
+
+    return contributors.reduce(
+      (totals, contributor) => {
+        return {
+          commits: totals.commits + (contributor.contributions || 0),
+          additions: totals.additions + (contributor.additions || 0),
+          deletions: totals.deletions + (contributor.deletions || 0),
+          pullRequests: totals.pullRequests + (contributor.pull_requests || 0),
+        };
+      },
+      { commits: 0, additions: 0, deletions: 0, pullRequests: 0 }
+    );
+  };
+
+  // Calculate contribution percentage for visualizations
+  const calculatePercentage = (value, total) => {
+    if (total === 0) return 0;
+    return Math.round((value / total) * 100);
+  };
+
+  // Get the totals for all metrics
+  const totals = calculateTotals();
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -157,27 +138,16 @@ function App() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-lg shadow-md">
-                <BarChart3 className="w-6 h-6 text-primary-foreground" />
+                <GitBranch className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">
                   GitHub Contribution Analyzer
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Fair contribution scoring beyond commit counts
+                  Analyze repository contributions and collaboration
                 </p>
               </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <ThemeToggle />
-              <Button
-                variant="outline"
-                size="sm"
-                className="shadow-sm hover:shadow"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Export Report
-              </Button>
             </div>
           </div>
         </div>
@@ -192,500 +162,373 @@ function App() {
               <span>Repository Analysis</span>
             </CardTitle>
             <CardDescription>
-              Enter a GitHub repository to analyze contributor fairness and
+              Enter a GitHub repository to analyze contributor metrics and
               workload distribution
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+            <form
+              onSubmit={handleSearch}
+              className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4"
+            >
               <div className="flex-1">
                 <Input
-                  placeholder="owner/repository-name"
+                  placeholder="username/repository-name"
                   className="text-base focus-visible:ring-primary"
-                  defaultValue="facebook/react"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
                 />
               </div>
-              <Button className="px-8 shadow-md hover:shadow-lg transition-shadow">
-                <GitBranch className="w-4 h-4 mr-2" />
-                Analyze Repository
+              <Button
+                type="submit"
+                className="px-8 shadow-md hover:shadow-lg transition-shadow"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="flex items-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Loading...
+                  </span>
+                ) : (
+                  <>
+                    <GitBranch className="w-4 h-4 mr-2" />
+                    Analyze Repository
+                  </>
+                )}
               </Button>
-            </div>
+            </form>
+            {error && (
+              <div className="mt-3 p-3 bg-destructive/10 text-destructive rounded-md">
+                {error}
+              </div>
+            )}
           </CardContent>
         </Card>
 
         {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="border shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Total Contributors
-                  </p>
-                  <p className="text-3xl font-bold text-foreground">4</p>
+        {searchPerformed && !loading && contributors.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="border shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Total Contributors
+                    </p>
+                    <p className="text-3xl font-bold text-foreground">
+                      {contributors.length}
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
+                    <Users className="w-8 h-8 text-blue-500 dark:text-blue-300" />
+                  </div>
                 </div>
-                <div className="p-3 rounded-full bg-chart-1/10">
-                  <Users className="w-8 h-8 text-chart-1" />
+              </CardContent>
+            </Card>
+            <Card className="border shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Total Commits
+                    </p>
+                    <p className="text-3xl font-bold text-foreground">
+                      {totals.commits}
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-full bg-green-100 dark:bg-green-900">
+                    <GitBranch className="w-8 h-8 text-green-500 dark:text-green-300" />
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Total Commits
-                  </p>
-                  <p className="text-3xl font-bold text-foreground">445</p>
+              </CardContent>
+            </Card>
+            <Card className="border shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Lines of Code Changed
+                    </p>
+                    <p className="text-3xl font-bold text-foreground">
+                      {(totals.additions + totals.deletions).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-full bg-amber-100 dark:bg-amber-900">
+                    <FileText className="w-8 h-8 text-amber-500 dark:text-amber-300" />
+                  </div>
                 </div>
-                <div className="p-3 rounded-full bg-chart-2/10">
-                  <GitBranch className="w-8 h-8 text-chart-2" />
+              </CardContent>
+            </Card>
+            <Card className="border shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Pull Requests
+                    </p>
+                    <p className="text-3xl font-bold text-foreground">
+                      {totals.pullRequests}
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
+                    <Star className="w-8 h-8 text-purple-500 dark:text-purple-300" />
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Lines of Code
-                  </p>
-                  <p className="text-3xl font-bold text-foreground">29.9K</p>
-                </div>
-                <div className="p-3 rounded-full bg-chart-3/10">
-                  <FileText className="w-8 h-8 text-chart-3" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Avg Score
-                  </p>
-                  <p className="text-3xl font-bold text-foreground">87.8</p>
-                </div>
-                <div className="p-3 rounded-full bg-chart-4/10">
-                  <Star className="w-8 h-8 text-chart-4" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="contributors" className="space-y-6">
-          <div className="bg-card rounded-lg p-1 shadow-sm border">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger
-                value="contributors"
-                className="data-[state=active]:shadow-md"
-              >
-                Contributors
-              </TabsTrigger>
-              <TabsTrigger
-                value="insights"
-                className="data-[state=active]:shadow-md"
-              >
-                Visual Insights
-              </TabsTrigger>
-              <TabsTrigger
-                value="leaderboard"
-                className="data-[state=active]:shadow-md"
-              >
-                Leaderboard
-              </TabsTrigger>
-              <TabsTrigger
-                value="timeline"
-                className="data-[state=active]:shadow-md"
-              >
-                Timeline
-              </TabsTrigger>
-            </TabsList>
-          </div>
-
-          {/* Contributors Tab */}
-          <TabsContent value="contributors" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {contributorsData.map((contributor) => (
-                <Card
-                  key={contributor.id}
-                  className="border shadow-md hover:shadow-lg transition-all duration-300"
+        {searchPerformed && !loading && contributors.length > 0 && (
+          <Tabs defaultValue="contributors" className="space-y-6">
+            <div className="bg-card rounded-lg p-1 shadow-sm border">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger
+                  value="contributors"
+                  className="data-[state=active]:shadow-md"
                 >
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <Avatar className="w-12 h-12 border-2 border-primary shadow-md">
-                        <AvatarImage
-                          src={contributor.avatar || "/placeholder.svg"}
-                          alt={contributor.name}
-                        />
-                        <AvatarFallback className="bg-primary text-primary-foreground font-bold">
-                          {contributor.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 space-y-4">
-                        <div>
-                          <h3 className="font-semibold text-foreground text-lg">
-                            {contributor.name}
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            @{contributor.username}
-                          </p>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-4 text-sm">
-                          <div className="bg-background p-2 rounded-md">
-                            <p className="text-muted-foreground">Commits</p>
-                            <p className="font-semibold text-foreground text-lg">
-                              {contributor.commits}
-                            </p>
-                          </div>
-                          <div className="bg-background p-2 rounded-md">
-                            <p className="text-muted-foreground">Lines Added</p>
-                            <p className="font-semibold text-chart-2 text-lg">
-                              +{contributor.linesAdded.toLocaleString()}
-                            </p>
-                          </div>
-                          <div className="bg-background p-2 rounded-md">
-                            <p className="text-muted-foreground">
-                              Lines Removed
-                            </p>
-                            <p className="font-semibold text-chart-5 text-lg">
-                              -{contributor.linesRemoved.toLocaleString()}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm text-muted-foreground">
-                              Contribution Score
-                            </span>
-                            <span className="text-sm font-semibold text-foreground">
-                              {contributor.score}/100
-                            </span>
-                          </div>
-                          <Progress value={contributor.score} className="h-2" />
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                          {contributor.badges.map((badge) => (
-                            <Badge
-                              key={badge}
-                              className={`${
-                                badgeColors[badge] ||
-                                "bg-secondary text-secondary-foreground"
-                              } shadow-sm`}
-                            >
-                              {badge}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                  Contributors
+                </TabsTrigger>
+                <TabsTrigger
+                  value="leaderboard"
+                  className="data-[state=active]:shadow-md"
+                >
+                  Leaderboard
+                </TabsTrigger>
+              </TabsList>
             </div>
-          </TabsContent>
 
-          {/* Visual Insights Tab */}
-          <TabsContent value="insights" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="border shadow-md hover:shadow-lg transition-all duration-300">
-                <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center space-x-2 text-lg">
-                    <RechartsPieChart className="w-5 h-5 text-primary" />
-                    <span>Contribution Distribution</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Percentage of total project work by contributor
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-2">
-                  <div className="h-80 chart-container">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <Pie
-                        data={pieChartData}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={100}
-                        dataKey="value"
-                        label={({ name, value }) => `${name}: ${value}%`}
-                        className="recharts-pie-custom"
-                      >
-                        {pieChartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "hsl(var(--card))",
-                          border: "1px solid hsl(var(--border))",
-                          borderRadius: "8px",
-                          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                        }}
-                      />
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border shadow-md hover:shadow-lg transition-all duration-300">
-                <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center space-x-2 text-lg">
-                    <TrendingUp className="w-5 h-5 text-primary" />
-                    <span>Monthly Contributions</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Commit activity over the last 6 months
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-2">
-                  <div className="h-80 chart-container">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={timelineData}>
-                        <CartesianGrid
-                          strokeDasharray="3 3"
-                          stroke="hsl(var(--border))"
-                          strokeOpacity={0.8}
-                        />
-                        <XAxis
-                          dataKey="month"
-                          stroke="hsl(var(--muted-foreground))"
-                        />
-                        <YAxis stroke="hsl(var(--muted-foreground))" />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "8px",
-                            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                          }}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="Sarah"
-                          stackId="1"
-                          stroke="hsl(var(--chart-1))"
-                          fill="hsl(var(--chart-1))"
-                          fillOpacity={0.6}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="Maya"
-                          stackId="1"
-                          stroke="hsl(var(--chart-2))"
-                          fill="hsl(var(--chart-2))"
-                          fillOpacity={0.6}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="Alex"
-                          stackId="1"
-                          stroke="hsl(var(--chart-3))"
-                          fill="hsl(var(--chart-3))"
-                          fillOpacity={0.6}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="David"
-                          stackId="1"
-                          stroke="hsl(var(--chart-4))"
-                          fill="hsl(var(--chart-4))"
-                          fillOpacity={0.6}
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Leaderboard Tab */}
-          <TabsContent value="leaderboard" className="space-y-6">
-            <Card className="border shadow-md hover:shadow-lg transition-all duration-300">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center space-x-2 text-lg">
-                  <Trophy className="w-5 h-5 text-primary" />
-                  <span>Contribution Leaderboard</span>
-                </CardTitle>
-                <CardDescription>
-                  Contributors ranked by fair contribution score
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-2">
-                <div className="space-y-4">
-                  {contributorsData
-                    .sort((a, b) => b.score - a.score)
-                    .map((contributor, index) => (
-                      <div
-                        key={contributor.id}
-                        className="flex items-center space-x-4 p-4 rounded-lg border border-border bg-card shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary/20"
-                      >
-                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold shadow-md">
-                          {index + 1}
-                        </div>
-                        <Avatar className="w-10 h-10 border-2 border-primary/50 shadow-md">
+            {/* Contributors Tab */}
+            <TabsContent value="contributors" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {contributors.map((contributor, index) => (
+                  <Card
+                    key={index}
+                    className="border shadow-md hover:shadow-lg transition-all duration-300"
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-start space-x-4">
+                        <Avatar className="w-12 h-12 border-2 border-primary shadow-md">
                           <AvatarImage
-                            src={contributor.avatar || "/placeholder.svg"}
-                            alt={contributor.name}
+                            src={
+                              contributor.avatar_url || "/placeholder-user.jpg"
+                            }
+                            alt={contributor.login}
                           />
                           <AvatarFallback className="bg-primary text-primary-foreground font-bold">
-                            {contributor.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
+                            {contributor.login?.substring(0, 2).toUpperCase() ||
+                              "GH"}
                           </AvatarFallback>
                         </Avatar>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-foreground">
-                            {contributor.name}
-                          </h4>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {contributor.badges.map((badge) => (
+                        <div className="flex-1 space-y-4">
+                          <div>
+                            <h3 className="font-semibold text-foreground text-lg">
+                              {contributor.name || contributor.login}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              @{contributor.login}
+                            </p>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div className="bg-background p-2 rounded-md">
+                              <p className="text-muted-foreground">Commits</p>
+                              <p className="font-semibold text-foreground text-lg">
+                                {contributor.contributions || 0}
+                              </p>
+                            </div>
+                            <div className="bg-background p-2 rounded-md">
+                              <p className="text-muted-foreground">
+                                Pull Requests
+                              </p>
+                              <p className="font-semibold text-purple-500 text-lg">
+                                {contributor.pull_requests || 0}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm text-muted-foreground">
+                                Contribution Rate
+                              </span>
+                              <span className="text-sm font-semibold text-foreground">
+                                {calculatePercentage(
+                                  contributor.contributions || 0,
+                                  totals.commits
+                                )}
+                                %
+                              </span>
+                            </div>
+                            <Progress
+                              value={calculatePercentage(
+                                contributor.contributions || 0,
+                                totals.commits
+                              )}
+                              className="h-2"
+                            />
+                          </div>
+
+                          <div className="flex flex-wrap gap-2">
+                            {contributor.contributions >
+                              totals.commits * 0.3 && (
+                              <Badge className="bg-blue-500 text-white shadow-sm">
+                                Top Contributor
+                              </Badge>
+                            )}
+                            {contributor.pull_requests > 0 && (
+                              <Badge className="bg-purple-500 text-white shadow-sm">
+                                PR Author
+                              </Badge>
+                            )}
+                            {contributor.additions + contributor.deletions >
+                              1000 && (
+                              <Badge className="bg-amber-500 text-white shadow-sm">
+                                Code Writer
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            {/* Leaderboard Tab */}
+            <TabsContent value="leaderboard" className="space-y-6">
+              <Card className="border shadow-md hover:shadow-lg transition-all duration-300">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center space-x-2 text-lg">
+                    <Star className="w-5 h-5 text-primary" />
+                    <span>Contribution Leaderboard</span>
+                  </CardTitle>
+                  <CardDescription>
+                    Contributors ranked by commit count
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <div className="space-y-4">
+                    {contributors
+                      .sort(
+                        (a, b) =>
+                          (b.contributions || 0) - (a.contributions || 0)
+                      )
+                      .map((contributor, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center space-x-4 p-4 rounded-lg border border-border bg-card shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary/20"
+                        >
+                          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold shadow-md">
+                            {index + 1}
+                          </div>
+                          <Avatar className="w-10 h-10 border-2 border-primary/50 shadow-md">
+                            <AvatarImage
+                              src={
+                                contributor.avatar_url ||
+                                "/placeholder-user.jpg"
+                              }
+                              alt={contributor.login}
+                            />
+                            <AvatarFallback className="bg-primary text-primary-foreground font-bold">
+                              {contributor.login
+                                ?.substring(0, 2)
+                                .toUpperCase() || "GH"}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-foreground">
+                              {contributor.name || contributor.login}
+                            </h4>
+                            <div className="flex flex-wrap gap-1 mt-1">
                               <Badge
-                                key={badge}
                                 variant="secondary"
                                 className="text-xs shadow-sm"
                               >
-                                {badge}
+                                {contributor.pull_requests || 0} PRs
                               </Badge>
-                            ))}
+                              <Badge
+                                variant="secondary"
+                                className="text-xs shadow-sm"
+                              >
+                                {calculatePercentage(
+                                  contributor.contributions || 0,
+                                  totals.commits
+                                )}
+                                % of commits
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-2xl font-bold text-foreground">
+                              {contributor.contributions || 0}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              commits
+                            </div>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-bold text-foreground">
-                            {contributor.score}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            score
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+                      ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        )}
 
-          {/* Timeline Tab */}
-          <TabsContent value="timeline" className="space-y-6">
-            <Card className="border shadow-md hover:shadow-lg transition-all duration-300">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center space-x-2 text-lg">
-                  <Calendar className="w-5 h-5 text-primary" />
-                  <span>Contribution Timeline</span>
-                </CardTitle>
-                <CardDescription>
-                  Individual contributor activity over time
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-2">
-                <div className="h-96 chart-container">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={timelineData}>
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                        stroke="hsl(var(--border))"
-                        strokeOpacity={0.8}
-                      />
-                      <XAxis
-                        dataKey="month"
-                        stroke="hsl(var(--muted-foreground))"
-                      />
-                      <YAxis stroke="hsl(var(--muted-foreground))" />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "hsl(var(--card))",
-                          border: "1px solid hsl(var(--border))",
-                          borderRadius: "8px",
-                          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                        }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="Sarah"
-                        stroke="hsl(var(--chart-1))"
-                        strokeWidth={3}
-                        dot={{
-                          fill: "hsl(var(--chart-1))",
-                          strokeWidth: 2,
-                          r: 4,
-                        }}
-                        activeDot={{
-                          r: 6,
-                          stroke: "hsl(var(--chart-1))",
-                          strokeWidth: 2,
-                          fill: "hsl(var(--background))",
-                        }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="Maya"
-                        stroke="hsl(var(--chart-2))"
-                        strokeWidth={3}
-                        dot={{
-                          fill: "hsl(var(--chart-2))",
-                          strokeWidth: 2,
-                          r: 4,
-                        }}
-                        activeDot={{
-                          r: 6,
-                          stroke: "hsl(var(--chart-2))",
-                          strokeWidth: 2,
-                          fill: "hsl(var(--background))",
-                        }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="Alex"
-                        stroke="hsl(var(--chart-3))"
-                        strokeWidth={3}
-                        dot={{
-                          fill: "hsl(var(--chart-3))",
-                          strokeWidth: 2,
-                          r: 4,
-                        }}
-                        activeDot={{
-                          r: 6,
-                          stroke: "hsl(var(--chart-3))",
-                          strokeWidth: 2,
-                          fill: "hsl(var(--background))",
-                        }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="David"
-                        stroke="hsl(var(--chart-4))"
-                        strokeWidth={3}
-                        dot={{
-                          fill: "hsl(var(--chart-4))",
-                          strokeWidth: 2,
-                          r: 4,
-                        }}
-                        activeDot={{
-                          r: 6,
-                          stroke: "hsl(var(--chart-4))",
-                          strokeWidth: 2,
-                          fill: "hsl(var(--background))",
-                        }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        {/* Empty state */}
+        {!searchPerformed && (
+          <div className="text-center py-12 my-8">
+            <img
+              src="/developer-woman.png"
+              alt="GitHub Contributions"
+              className="mx-auto h-48 mb-6"
+            />
+            <h2 className="text-2xl font-bold mb-2">
+              Analyze GitHub Repository Contributions
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Enter a GitHub username and repository name in the format
+              "username/repository" to analyze contributions from all
+              collaborators. See detailed statistics about commits, pull
+              requests, and code changes.
+            </p>
+          </div>
+        )}
+
+        {/* No results state */}
+        {searchPerformed && !loading && contributors.length === 0 && !error && (
+          <div className="text-center py-12 my-8 bg-muted/50 rounded-lg border border-border">
+            <h2 className="text-xl font-semibold mb-2">
+              No Contributors Found
+            </h2>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              We couldn't find any contributors for the repository "{username}/
+              {repo}". Please check the repository name and try again.
+            </p>
+          </div>
+        )}
       </div>
 
       <footer className="mt-12 border-t border-border bg-card py-6">
@@ -693,14 +536,14 @@ function App() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
               <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-primary-foreground" />
+                <GitBranch className="w-5 h-5 text-primary-foreground" />
               </div>
               <span className="text-sm font-medium text-foreground">
                 GitHub Contribution Analyzer
               </span>
             </div>
             <div className="text-sm text-muted-foreground">
-              © 2024 · Built with React and Tailwind CSS
+              © {new Date().getFullYear()} · Built with React and Tailwind CSS
             </div>
           </div>
         </div>
