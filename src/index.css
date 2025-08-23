@@ -1,0 +1,6 @@
+@import "./styles/globals.css";
+@import "./styles/recharts-custom.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

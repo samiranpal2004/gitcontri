@@ -1,0 +1,123 @@
+/* Recharts customization */
+.recharts-tooltip-wrapper {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 0.375rem !important;
+  border: 1px solid var(--border) !important;
+}
+
+.recharts-default-tooltip {
+  background-color: var(--card) !important;
+  color: var(--card-foreground) !important;
+  border-color: var(--border) !important;
+  border-radius: 0.375rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  padding: 0.75rem !important;
+}
+
+.recharts-tooltip-label {
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: var(--primary) !important;
+}
+
+.recharts-tooltip-item-name,
+.recharts-tooltip-item-value {
+  font-size: 0.75rem !important;
+}
+
+/* Custom chart colors */
+.recharts-layer .recharts-sector[fill="var(--chart-1)"] {
+  fill: var(--chart-1);
+}
+.recharts-layer .recharts-sector[fill="var(--chart-2)"] {
+  fill: var(--chart-2);
+}
+.recharts-layer .recharts-sector[fill="var(--chart-3)"] {
+  fill: var(--chart-3);
+}
+.recharts-layer .recharts-sector[fill="var(--chart-4)"] {
+  fill: var(--chart-4);
+}
+.recharts-layer .recharts-sector[fill="var(--chart-5)"] {
+  fill: var(--chart-5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .responsive-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .responsive-stack {
+    flex-direction: column;
+  }
+
+  .responsive-hide {
+    display: none;
+  }
+}
+
+/* Animation utilities */
+.animate-in {
+  animation: animate-in 0.3s ease-out;
+}
+
+@keyframes animate-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark mode toggle transition */
+.theme-transition {
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+/* GitHub-like avatar */
+.github-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--secondary);
+}
+
+.github-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Badge styles for contribution types */
+.badge-feature {
+  background-color: var(--chart-1);
+  color: white;
+}
+
+.badge-bug {
+  background-color: var(--chart-5);
+  color: white;
+}
+
+.badge-doc {
+  background-color: var(--chart-2);
+  color: white;
+}
+
+.badge-quality {
+  background-color: var(--chart-3);
+  color: white;
+}
+
+.badge-review {
+  background-color: var(--chart-4);
+  color: white;
+}

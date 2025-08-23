@@ -1,0 +1,319 @@
+/* Theme variables */
+:root {
+  /* Base colors */
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+
+  /* Card and UI elements */
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+
+  /* Primary brand color - GitHub-like */
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+
+  /* Secondary colors */
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+
+  /* UI accent colors */
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+
+  /* Semantic colors */
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --success: 142.1 76.2% 36.3%;
+  --success-foreground: 210 40% 98%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 210 40% 98%;
+
+  /* Border and input styles */
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+
+  /* Chart colors - vibrant and distinguishable */
+  --chart-1: 221.2 83.2% 53.3%;
+  --chart-2: 142.1 76.2% 36.3%;
+  --chart-3: 243 75% 59%;
+  --chart-4: 38 92% 50%;
+  --chart-5: 0 84.2% 60.2%;
+
+  /* Border radius */
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Base colors */
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+
+  /* Card and UI elements */
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+
+  /* Primary brand color - GitHub-like */
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+
+  /* Secondary colors */
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+
+  /* UI accent colors */
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+
+  /* Semantic colors */
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --success: 142.1 70.6% 45.3%;
+  --success-foreground: 144.9 80.4% 10%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 48 96% 89%;
+
+  /* Border and input styles */
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 48%;
+
+  /* Chart colors - vibrant and distinguishable in dark mode */
+  --chart-1: 221.2 83.2% 65.3%;
+  --chart-2: 142.1 76.2% 45.3%;
+  --chart-3: 243 75% 69%;
+  --chart-4: 38 92% 60%;
+  --chart-5: 0 84.2% 70.2%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Base colors - dark mode */
+  --background: #09090b;
+  --foreground: #e4e4e7;
+
+  /* Card and UI elements - dark mode */
+  --card: #18181b;
+  --card-foreground: #e4e4e7;
+  --popover: #18181b;
+  --popover-foreground: #e4e4e7;
+
+  /* Primary brand color - GitHub-like dark mode */
+  --primary: #60a5fa;
+  --primary-foreground: #030712;
+
+  /* Secondary colors - dark mode */
+  --secondary: #27272a;
+  --secondary-foreground: #e4e4e7;
+
+  /* UI accent colors - dark mode */
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #e4e4e7;
+
+  /* Semantic colors - dark mode */
+  --destructive: #f87171;
+  --destructive-foreground: #030712;
+  --success: #4ade80;
+  --success-foreground: #030712;
+  --warning: #fbbf24;
+  --warning-foreground: #030712;
+
+  /* Border and input styles - dark mode */
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #71717a;
+
+  /* Chart colors - vibrant and distinguishable - dark mode */
+  --chart-1: #60a5fa;
+  --chart-2: #34d399;
+  --chart-3: #a5b4fc;
+  --chart-4: #fbbf24;
+  --chart-5: #f87171;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: var(--ring);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  h1 {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+}
+
+@layer components {
+  /* GitHub-like code snippets */
+  .code-block {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    padding: 1rem;
+    border-radius: 0.375rem;
+    font-family: monospace;
+    font-size: 0.875rem;
+    white-space: pre-wrap;
+  }
+
+  /* Gradient badges */
+  .badge-gradient {
+    background: linear-gradient(to right, var(--primary), #60a5fa);
+    color: white;
+  }
+
+  /* GitHub-like buttons */
+  .btn-github {
+    background-color: #24292e;
+    color: white;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  .btn-github:hover {
+    background-color: #2c3137;
+  }
+
+  /* Contribution heat map cell */
+  .contribution-cell {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 0.125rem;
+    transition: all 0.2s;
+  }
+
+  /* Animated stats card */
+  .stats-card {
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background-color: var(--card);
+    padding: 1.5rem;
+    transition: all 0.2s;
+  }
+  .stats-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  /* GitHub-like tabs */
+  .github-tabs {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .github-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .github-tab:hover {
+    border-color: var(--primary);
+  }
+
+  .github-tab-active {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+}
+
+@layer utilities {
+  /* Glassmorphism effect */
+  .glass {
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .dark .glass {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, var(--primary), #60a5fa);
+  }
+
+  /* Subtle hover effect */
+  .hover-lift {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Animated pulse for loading states */
+  .pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    background-color: var(--muted);
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* GitHub-like focus state */
+  .focus-github {
+    outline: none;
+  }
+
+  .focus-github:focus {
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--primary);
+  }
+}
