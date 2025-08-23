@@ -131,7 +131,7 @@ function App() {
   const totals = calculateTotals();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="border-b border-border bg-card sticky top-0 z-10 shadow-sm">
         <div className="container mx-auto px-4 py-6">
@@ -153,7 +153,7 @@ function App() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8 space-y-8">
+      <div className="container mx-auto px-4 py-8 space-y-8 flex-grow">
         {/* Repository Input Section */}
         <Card className="border shadow-md hover:shadow-lg transition-shadow duration-300">
           <CardHeader>
@@ -500,11 +500,11 @@ function App() {
         {/* Empty state */}
         {!searchPerformed && (
           <div className="text-center py-12 my-8">
-            <img
+            {/* <img
               src="/developer-woman.png"
               alt="GitHub Contributions"
               className="mx-auto h-48 mb-6"
-            />
+            /> */}
             <h2 className="text-2xl font-bold mb-2">
               Analyze GitHub Repository Contributions
             </h2>
@@ -531,7 +531,7 @@ function App() {
         )}
       </div>
 
-      <footer className="mt-12 border-t border-border bg-card py-6">
+      <footer className="mt-auto border-t border-border bg-card py-6">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
