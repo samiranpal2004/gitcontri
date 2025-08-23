@@ -39,6 +39,10 @@ import {
   Line,
 } from "recharts";
 
+// Example of accessing the GitHub token from environment variables
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
+console.log("GitHub Token available:", !!GITHUB_TOKEN);
+
 // Dummy data for demonstration
 const contributorsData = [
   {
