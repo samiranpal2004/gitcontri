@@ -1,98 +1,101 @@
 /* Theme variables */
 :root {
   /* Base colors */
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
+  --background: 210 40% 98%;
+  --foreground: 222 47% 11%;
 
   /* Card and UI elements */
   --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
+  --card-foreground: 222 47% 11%;
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
+  --popover-foreground: 222 47% 11%;
 
-  /* Primary brand color - GitHub-like */
-  --primary: 221.2 83.2% 53.3%;
+  /* Primary brand color - Modern blue */
+  --primary: 221 83% 53%;
   --primary-foreground: 210 40% 98%;
 
+  /* Accent color - Vibrant purple */
+  --accent: 267 83% 60%;
+  --accent-foreground: 210 40% 98%;
+
   /* Secondary colors */
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
 
   /* UI accent colors */
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
 
   /* Semantic colors */
-  --destructive: 0 84.2% 60.2%;
+  --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
-  --success: 142.1 76.2% 36.3%;
+  --success: 142 76% 36%;
   --success-foreground: 210 40% 98%;
   --warning: 38 92% 50%;
   --warning-foreground: 210 40% 98%;
 
   /* Border and input styles */
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 221 83% 53%;
 
   /* Chart colors - vibrant and distinguishable */
-  --chart-1: 221.2 83.2% 53.3%;
-  --chart-2: 142.1 76.2% 36.3%;
-  --chart-3: 243 75% 59%;
-  --chart-4: 38 92% 50%;
-  --chart-5: 0 84.2% 60.2%;
+  --chart-1: 221 83% 53%; /* Blue */
+  --chart-2: 267 83% 60%; /* Purple */
+  --chart-3: 142 76% 45%; /* Green */
+  --chart-4: 38 92% 50%; /* Orange */
+  --chart-5: 0 84% 60%; /* Red */
 
   /* Border radius */
-  --radius: 0.5rem;
+  --radius: 1rem;
 }
 
 .dark {
   /* Base colors */
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
 
   /* Card and UI elements */
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
+  --card: 224 71% 4%;
+  --card-foreground: 210 40% 98%;
+  --popover: 224 71% 4%;
+  --popover-foreground: 210 40% 98%;
 
-  /* Primary brand color - GitHub-like */
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
+  /* Primary brand color - Modern blue */
+  --primary: 217 91% 60%;
+  --primary-foreground: 222 47% 11%;
+
+  /* Accent color - Vibrant purple */
+  --accent: 267 83% 60%;
+  --accent-foreground: 210 40% 98%;
 
   /* Secondary colors */
-  --secondary: 217.2 32.6% 17.5%;
+  --secondary: 217 33% 17%;
   --secondary-foreground: 210 40% 98%;
 
   /* UI accent colors */
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
 
   /* Semantic colors */
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  --success: 142.1 70.6% 45.3%;
-  --success-foreground: 144.9 80.4% 10%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+  --success: 142 71% 45%;
+  --success-foreground: 210 40% 98%;
   --warning: 38 92% 50%;
-  --warning-foreground: 48 96% 89%;
+  --warning-foreground: 210 40% 98%;
 
   /* Border and input styles */
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 224.3 76.3% 48%;
+  --border: 217 33% 17%;
+  --input: 217 33% 17%;
+  --ring: 224 76% 48%;
 
   /* Chart colors - vibrant and distinguishable in dark mode */
-  --chart-1: 221.2 83.2% 65.3%;
-  --chart-2: 142.1 76.2% 45.3%;
-  --chart-3: 243 75% 69%;
-  --chart-4: 38 92% 60%;
-  --chart-5: 0 84.2% 70.2%;
-  --radius: 0.5rem;
+  --chart-1: 221 83% 65%; /* Blue */
+  --chart-2: 267 83% 65%; /* Purple */
+  --chart-3: 142 76% 55%; /* Green */
+  --chart-4: 38 92% 60%; /* Orange */
+  --chart-5: 0 84% 70%; /* Red */
 }
 
 .dark {
