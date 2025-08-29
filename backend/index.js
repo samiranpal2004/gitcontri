@@ -19,6 +19,16 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+
+app.get("/health", (req, res) => {
+  res.json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+    message: "Backend is running smoothly",
+  });
+});
+
 // 1. Get contributors
 app.get("/api/contributors/:owner/:repo", async (req, res) => {
   try {
