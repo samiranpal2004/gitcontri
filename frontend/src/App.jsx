@@ -146,7 +146,7 @@ function App() {
 
       // Fetch contributors from backend API
       const contributorsResponse = await fetch(
-        `http://localhost:5000/api/contributors/${newUsername}/${newRepo}`
+        `https://gitcontri-backend.vercel.app/api/contributors/${newUsername}/${newRepo}`
       );
       if (!contributorsResponse.ok) {
         throw new Error(
@@ -159,7 +159,7 @@ function App() {
       // Fetch repository stats from backend API
       try {
         const statsResponse = await fetch(
-          `http://localhost:5000/api/stats/${newUsername}/${newRepo}`
+          `https://gitcontri-backend.vercel.app/api/stats/${newUsername}/${newRepo}`
         );
         if (statsResponse.ok) {
           const statsData = await statsResponse.json();

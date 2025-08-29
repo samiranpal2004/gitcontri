@@ -16,7 +16,7 @@ const app = express();
 const PORT = 5000;
 
 // Allow frontend requests
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(morgan("dev"));
 
