@@ -323,7 +323,7 @@ function App() {
               </motion.div>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">
-                  GitHub Contribution Analyzer
+                  Commit Scope
                 </h1>
                 <p className="text-sm text-muted-foreground">
                   Analyze repository contributions and collaboration
@@ -1596,18 +1596,6 @@ function App() {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <motion.div
-                className="absolute inset-0 bg-gradient-primary rounded-full opacity-20 blur-xl"
-                animate={{
-                  scale: [1, 1.05, 1],
-                  opacity: [0.2, 0.3, 0.2],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                }}
-              />
               <motion.div className="relative">
                 <Github className="w-24 h-24 mx-auto text-primary mb-4" />
               </motion.div>
