@@ -57,6 +57,7 @@ gitcontri/
 ## 🛠️ Technologies Used
 
 ### Frontend
+
 - **React**: Core library for building the UI
 - **Framer Motion**: Animation library for smooth transitions
 - **Tailwind CSS**: Utility-first CSS framework for styling
@@ -65,6 +66,7 @@ gitcontri/
 - **Shadcn UI**: Component library built on Radix UI
 
 ### Backend
+
 - **Node.js**: JavaScript runtime for the server
 - **Express**: Web framework for the API
 - **Axios**: HTTP client for API requests
@@ -82,6 +84,7 @@ gitcontri/
 ## 💡 Key Concepts
 
 ### Contribution Metrics
+
 - **Commits**: Direct code contributions to the repository
 - **Pull Requests**: Proposed changes submitted for review
 - **Code Changes**: Lines of code added or deleted
@@ -89,6 +92,7 @@ gitcontri/
 - **Bugs Fixed**: Issues resolved in the codebase
 
 ### Visualization Approaches
+
 - **Bar Charts**: Compare contributor activities
 - **Pie Charts**: Show proportional distributions
 - **Progress Bars**: Visualize percentages and completion
@@ -96,6 +100,7 @@ gitcontri/
 - **Cards**: Display focused information about specific metrics
 
 ### UI/UX Principles
+
 - **Modern Design**: Clean interface with bold highlights
 - **Animation**: Smooth transitions for enhanced user experience
 - **Responsive Layout**: Adapts to different screen sizes
@@ -104,10 +109,12 @@ gitcontri/
 ## 🚀 Installation
 
 ### Prerequisites
+
 - Node.js (v14+)
 - npm or yarn
 
 ### Frontend Setup
+
 ```bash
 # Navigate to frontend directory
 cd frontend
@@ -120,6 +127,7 @@ npm run dev
 ```
 
 ### Backend Setup
+
 ```bash
 # Navigate to backend directory
 cd backend
@@ -134,6 +142,7 @@ npm run dev
 ## 💻 Development
 
 ### Running the Full Stack
+
 ```bash
 # Terminal 1 - Backend
 cd backend
@@ -145,7 +154,9 @@ npm run dev
 ```
 
 ### Environment Variables
+
 Create a `.env` file in the backend directory:
+
 ```
 GITHUB_TOKEN=your_github_token
 PORT=5000
@@ -154,6 +165,7 @@ PORT=5000
 ## 📦 Deployment
 
 ### Frontend Deployment
+
 ```bash
 # Build the application
 cd frontend
@@ -161,6 +173,7 @@ npm run build
 ```
 
 ### Backend Deployment
+
 ```bash
 # Create production build
 cd backend
@@ -172,9 +185,11 @@ npm run build
 ### Endpoints
 
 #### GET /api/contributors/:username/:repo
+
 Returns all contributors for a repository.
 
 #### GET /api/stats/:username/:repo
+
 Returns detailed statistics for a repository.
 
 ## 📄 License
