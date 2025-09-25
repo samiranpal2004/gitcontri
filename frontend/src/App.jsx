@@ -47,7 +47,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 
 // Example of accessing the GitHub token from environment variables
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 console.log("GitHub Token available:", !!GITHUB_TOKEN);
+console.log("API Base URL:", API_BASE_URL);
 
 // Animation variants for staggered animations
 const containerVariants = {
@@ -146,7 +148,7 @@ function App() {
 
       // Fetch contributors from backend API
       const contributorsResponse = await fetch(
-        `https://gitcontri-backend.vercel.app/api/contributors/${newUsername}/${newRepo}`
+        `${API_BASE_URL}/api/contributors/${newUsername}/${newRepo}`
       );
       if (!contributorsResponse.ok) {
         throw new Error(
@@ -159,7 +161,7 @@ function App() {
       // Fetch repository stats from backend API
       try {
         const statsResponse = await fetch(
-          `https://gitcontri-backend.vercel.app/api/stats/${newUsername}/${newRepo}`
+          `${API_BASE_URL}/api/stats/${newUsername}/${newRepo}`
         );
         if (statsResponse.ok) {
           const statsData = await statsResponse.json();
