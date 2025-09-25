@@ -47,7 +47,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 
 // Example of accessing the GitHub token from environment variables
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 console.log("GitHub Token available:", !!GITHUB_TOKEN);
 console.log("API Base URL:", API_BASE_URL);
 
