@@ -12,12 +12,14 @@ dist
 dist-ssr
 *.local
 
-# Environment variables
+# Environment variables (IMPORTANT: Never commit these!)
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+backend/.env
+frontend/.env
 
 # Editor directories and files
 .vscode/*
@@ -29,3 +31,20 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Build outputs
+build/
+dist/
+*.tsbuildinfo
+
+# Testing
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
