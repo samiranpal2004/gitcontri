@@ -1,5 +1,13 @@
 {
   "version": 2,
+  "functions": {
+    "src/server.js": {
+      "maxDuration": 60,
+      "memory": 1024,
+      "runtime": "nodejs20.x",
+      "regions": ["iad1", "sfo1", "cdg1"]
+    }
+  },
   "builds": [
     {
       "src": "src/server.js",
@@ -7,9 +15,24 @@
     }
   ],
   "routes": [
+    { "src": "/api/(.*)", "dest": "src/server.js" },
+    { "src": "/health", "dest": "src/server.js" }
+  ],
+  "headers": [
     {
-      "src": "/(.*)",
-      "dest": "src/server.js"
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS" },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "GITHUB_TOKEN": "@GITHUB_TOKEN"
+  }
 }

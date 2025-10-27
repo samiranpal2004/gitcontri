@@ -7,9 +7,11 @@ import NodeCache from "node-cache";
 const cache = new NodeCache({ stdTTL: 300 });
 const router = express.Router();
 
-const headers = {
-  Authorization: `token ${process.env.GITHUB_TOKEN}`,
-  "User-Agent": "contribution-analyzer",
+const makeHeaders = () => {
+  const token = process.env.GITHUB_TOKEN;
+  const h = { "User-Agent": "contribution-analyzer" };
+  if (token) h["Authorization"] = `token ${token}`;
+  return h;
 };
 
 const SCORING = {
@@ -89,7 +91,10 @@ router.get("/:owner/:repo", async (req, res) => {
     while (commits.length < maxCommits) {
       const { data } = await axios.get(
         `https://api.github.com/repos/${owner}/${repo}/commits`,
-        { params: { per_page: 100, page, since: sinceISO }, headers }
+        {
+          params: { per_page: 100, page, since: sinceISO },
+          headers: makeHeaders(),
+        }
       );
       if (!Array.isArray(data) || data.length === 0) break;
       commits.push(...data);
@@ -107,7 +112,7 @@ router.get("/:owner/:repo", async (req, res) => {
       const msg = c.commit?.message || "";
       const { data: detail } = await axios.get(
         `https://api.github.com/repos/${owner}/${repo}/commits/${sha}`,
-        { headers }
+        { headers: makeHeaders() }
       );
 
       const adds = detail?.stats?.additions || 0;

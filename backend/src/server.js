@@ -2,9 +2,11 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 dotenv.config();
 
-const headers = {
-  Authorization: `token ${process.env.GITHUB_TOKEN}`,
-  "User-Agent": "contribution-analyzer",
+const makeHeaders = () => {
+  const token = process.env.GITHUB_TOKEN;
+  const h = { "User-Agent": "contribution-analyzer" };
+  if (token) h["Authorization"] = `token ${token}`;
+  return h;
 };
 // backend/index.js
 import express from "express";
@@ -35,7 +37,7 @@ app.get("/api/contributors/:owner/:repo", async (req, res) => {
     const { owner, repo } = req.params;
     const response = await axios.get(
       `https://api.github.com/repos/${owner}/${repo}/contributors`,
-      { headers }
+      { headers: makeHeaders() }
     );
     res.json(response.data);
   } catch (err) {
@@ -52,7 +54,7 @@ app.get("/api/commits/:owner/:repo", async (req, res) => {
     const { owner, repo } = req.params;
     const response = await axios.get(
       `https://api.github.com/repos/${owner}/${repo}/commits?per_page=100`,
-      { headers }
+      { headers: makeHeaders() }
     );
     res.json(response.data);
   } catch (err) {
@@ -63,7 +65,12 @@ app.get("/api/commits/:owner/:repo", async (req, res) => {
 // 3. Get contributor stats + scoring
 app.use("/api/stats", statsRouter);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
-});
+// In Vercel, we export the Express app as a serverless function handler.
+// Only start a local server when not running on Vercel.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Backend running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
